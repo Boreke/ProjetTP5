@@ -1,10 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Main {
 
@@ -12,9 +10,9 @@ public class Main {
         partie1();
     }
     private static void partie1() throws FileNotFoundException {
-// scanner va lire le contenu de fichier.csv
+
         Scanner scanner = new Scanner(new File("dpt2018.csv"));
-// stringBuilder va stocker le contenu de fichier.csv
+
         if (scanner.hasNextLine()) {
             scanner.nextLine();
         }
@@ -25,8 +23,6 @@ public class Main {
                     .append("\n");
         }
         scanner.close();
-// Les deux lignes suivantes vont ensuite produire un String[] contenant
-// les donneees du fichier CSV
 
         String data = stringBuilder.toString();
         String[] lines = data.split("\n");
@@ -42,8 +38,7 @@ public class Main {
         int minAn = 2018;
         int nbMarie = 0;
 
-        int nbCamilleHomme = 0;
-        int nbCamilleFemmes = 0;
+
         int year = 0;
         StringBuilder camilleStringBuilder = new StringBuilder();
 
@@ -66,26 +61,34 @@ public class Main {
 
             }
 
-            if (annais.equals("2016") && dpt.equals("75")) nbNais++;
+            if (annais.equals("2016") && dpt.equals("75")) nbNais+=Integer.parseInt(parts[4]);
 
             if (gender == 1) {
                 switch (name) {
                     case "THIBAUT":
-                        nbPrenoms[0]++;
+                        nbPrenoms[0] += Integer.parseInt(parts[4]);
+                        break;
                     case "CLAUDE":
-                        nbPrenoms[1]++;
+                        nbPrenoms[1] += Integer.parseInt(parts[4]);
+                        break;
                     case "JÉRÔME":
-                        nbPrenoms[2]++;
+                        nbPrenoms[2] += Integer.parseInt(parts[4]);
+                        break;
                     case "HERVÉ":
-                        nbPrenoms[3]++;
+                        nbPrenoms[3] += Integer.parseInt(parts[4]);
+                        break;
                     case "PATRICK":
-                        nbPrenoms[4]++;
+                        nbPrenoms[4] += Integer.parseInt(parts[4]);
+                        break;
                     case "GUILLAUME":
-                        nbPrenoms[5]++;
+                        nbPrenoms[5] += Integer.parseInt(parts[4]);
+                        break;
                     case "JEAN":
-                        nbJean++;
+                        nbJean += Integer.parseInt(parts[4]);
+                        break;
                     case "CAMILLE":
-                        camilleStringBuilder.append(line);
+                        camilleStringBuilder.append(line).append("\n");
+                        break;
                 }
 
                 if (!nomsHomme.contains(name)){
@@ -94,9 +97,9 @@ public class Main {
 
             } else {
                 if (name.equals("MARIE")) {
-                    nbMarie++;
+                    nbMarie+=Integer.parseInt(parts[4]);
                 } else if (name.equals("CAMILLE")) {
-                    camilleStringBuilder.append(line);
+                    camilleStringBuilder.append(line).append("\n");
                 }
                 if (!nomsFemme.contains(name)){
                     nomsFemme.add(name);
@@ -107,14 +110,15 @@ public class Main {
         String dataCamille=camilleStringBuilder.toString();
         String[] camilleLines=dataCamille.split("\n");
         for (int i = 1900; i < 2019; i++) {
-
+            int nbCamilleHomme = 0;
+            int nbCamilleFemmes = 0;
             for (String line:camilleLines) {
                 String[] parts= line.split(";");
-                if (parts[2].equals(Integer.toString(i))){
+                if (!parts[2].equals("XXXX") && i == Integer.parseInt(parts[2])){
                     if(parts[0].equals("1")){
-                        nbCamilleHomme++;
+                        nbCamilleHomme+=Integer.parseInt(parts[4]);
                     }else{
-                        nbCamilleFemmes++;
+                        nbCamilleFemmes+=Integer.parseInt(parts[4]);
                     }
                 }
             }
@@ -139,6 +143,11 @@ public class Main {
         System.out.println(year);
         for (int i = 0; i < nbPrenoms.length; i++) {
             System.out.println("Nombre de " + nomClaudeEtc[i] + ": " + nbPrenoms[i]);
+        }
+        if (year==0){
+            System.out.println("il n'y a pas d'années ou le camille est dominant chez les femmes");
+        } else{
+            System.out.println("le prenom camille est dominant chez les femmes a partir de "+year);
         }
     }
     private void partie2()throws FileNotFoundException{
