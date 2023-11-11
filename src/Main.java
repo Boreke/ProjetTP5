@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import java.util.Scanner;
@@ -7,7 +9,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        partie1();
+        partie2();
     }
     private static void partie1() throws FileNotFoundException {
 
@@ -150,7 +152,56 @@ public class Main {
             System.out.println("le prenom camille est dominant chez les femmes a partir de "+year);
         }
     }
-    private void partie2()throws FileNotFoundException{
+    private static String[] readFromFile(){
+        try {
+            Scanner scanner = new Scanner(new File("input.txt"));
+            StringBuilder stringBuilder = new StringBuilder();
+            while (scanner.hasNextLine()) {
+                stringBuilder.append(scanner.nextLine()).append("\n");
+            }
+            scanner.close();
+            String[] lines=stringBuilder.toString().split("\n");
+            return lines;
+        }catch (FileNotFoundException e) {
+            System.out.println("file not found");
+            return new String[]{"error", e.toString()};
+        }
+    }
+    private static int[] countWords(){
+        String[] lines=readFromFile();
+        int[] wordNumber=new int[lines.length];
+        int cmpt = 0;
+        for (String line: lines) {
+            String[] words = line.split(" ");
+            if (!words[0].equals("")) {
+                wordNumber[cmpt] += words.length;
+                cmpt++;
+            }
+        }
+
+        return wordNumber;
+    }
+    private static void partie2(){
+        File file=new File("nombre_mots.txt");
+        if(!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            PrintWriter printWriter=new PrintWriter(file);
+            for (int number: countWords()) {
+                if(number!=0) {
+                    printWriter.write(String.valueOf(number));
+                    printWriter.write("\n");
+                }
+            }
+            printWriter.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
